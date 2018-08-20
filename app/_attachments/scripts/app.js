@@ -26,15 +26,28 @@ angular.module('pokemonApp', ['ngRoute'])
 		})*/
 		
 		
-			var oudste = $('#pokDateText').val('1998-01-23');
-			var nieuwste = $('#pokDateDateText').val('2015-07-11');
+			$('#pokDateText').val('1998-01-23');
+			$('#pokDateDateText').val('2015-07-11');
           $('#searchButton').on('click', function() {
         	  getPutSrv.getPok().then(function(data){
       			var dataJsonPok = data.rows["0"].doc.pokemonJson.docs;
     			for(var i = 0; i < dataJsonPok.length; i++ ){
+    				var oudsteArr = [];
     				var owned = dataJsonPok[i].owned;
     				var naamPok = dataJsonPok[i].name;	
-        			c.log(naamPok);
+    				var oudste=  $('#pokDateText').val();
+    				var nieuwste = $('#pokDateDateText').val();
+    				oudsteArr.push(owned);
+    				
+    				//oudsteArr.sort( function (a,b) { return a === b ? 0 : a < b ? -1: 1} );
+    				//c.log(oudsteArr);
+    				
+    				
+        			/*if(oudste == oudsteArr ){
+        				c.log(oudsteArr);
+        			}else{
+        				c.log('no');
+        			}*/
     				
     			}
         	  })
