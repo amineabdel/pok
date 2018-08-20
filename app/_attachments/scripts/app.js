@@ -12,7 +12,7 @@ angular.module('pokemonApp', ['ngRoute'])
 	        .otherwise({redirectTo:'/home'});
 	})
 	
-	.controller('homeCtrl', function($scope,$http,getPutSrv,pokSrv) {
+	.controller('homeCtrl', function($scope,$http,getPutSrv/*,pokSrv*/) {
 		//ik krijg errors in console omdat sommige pokemons wel al bestaan
 		// if maken zodat wanneer de pokemon al in de DB zit, niet meer in te doen
 		
@@ -59,7 +59,7 @@ angular.module('pokemonApp', ['ngRoute'])
 		
 	
    
-   .service('pokSrv', function($http, $q) {
+/*   .service('pokSrv', function($http, $q) {
 		$('#pokDateText').val('1998-01-23');
 			$('#pokDateDateText').val('2015-07-11');
           $('#searchButton').on('click', function() {
@@ -82,7 +82,7 @@ angular.module('pokemonApp', ['ngRoute'])
         			}else{
         				c.log('no');
         			}*/
-    })
+    //})
 	
 	
 	  .service('getPutSrv', function($http, $q){
