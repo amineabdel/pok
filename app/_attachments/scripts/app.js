@@ -1,7 +1,7 @@
 'use strict'
-
+var c = console;
 //http://127.0.0.1:5984/pok/_design/app/_view/byname?key="bulbasaur"
-angular.module('pokApp', ['ngRoute'])
+angular.module('pokemonApp', ['ngRoute'])
 
 	.config(function($routeProvider) {
 	    $routeProvider
@@ -12,64 +12,54 @@ angular.module('pokApp', ['ngRoute'])
 	        .otherwise({redirectTo:'/home'});
 	})
 	
-	.controller('homeCtrl', function($scope,pokSrv,saveSrv) {
-		$('#pokText').val('charmander');
-		$('#searchButton').on('click', function() {
-			$scope.pok = '';
-			var pokVal = $('#pokText').val().toLowerCase();
-
-			
-			pokSrv.getPok(pokVal).then(function(res){
-				$scope.pok = res.toString();
-		    	
-				var doc = {};
-				doc.pokMoves = $scope.pok;
-				var json = JSON.stringify(doc);
-
-				saveSrv.setObject(pokVal,json);
-
-			}),function(e){
-				saveSrv.getObject(pokVal).then(function(data){
-					$scope.pok = data.pokMoves;
-				})
-				console.log("weed " + err);
+	.controller('homeCtrl', function($scope,$http,getPutSrv/*,pokSrv*/) {
+		//ik krijg errors in console omdat sommige pokemons wel al bestaan
+		// if maken zodat wanneer de pokemon al in de DB zit, niet meer in te doen
+		
+		/*getPutSrv.getPok().then(function(data){
+			var dataJsonPok = data.rows["0"].doc.pokemonJson.docs;
+			for(var i = 0; i < dataJsonPok.length; i++ ){
+				var name = dataJsonPok[i].name
+				var allePok = dataJsonPok[i];	
+				getPutSrv.setPok(name,allePok);
 			}
-			
-			
-		})
-	})
-   
-   .service('pokSrv', function($http, $q) {
-	   this.getPok = function(pokName){
-		   var q = $q.defer();
-			var pokApi = 'https://pokeapi.co/api/v2/pokemon/'+ encodeURIComponent(pokName) +'/';
-   		
-			$http.get(pokApi).then(function(data){
-    			var resultObj = data.data.moves;
-    			var moves = [];
-    			for(var i = 0; i < resultObj.length;i++){
-    				moves.push(resultObj[i].move.name);
+		})*/
+		
+		
+			var oudste = $('#pokDateText').val('1998-01-23');
+			var nieuwste = $('#pokDateDateText').val('2015-07-11');
+          $('#searchButton').on('click', function() {
+        	  getPutSrv.getPok().then(function(data){
+      			var dataJsonPok = data.rows["0"].doc.pokemonJson.docs;
+    			for(var i = 0; i < dataJsonPok.length; i++ ){
+    				var owned = dataJsonPok[i].owned;
+    				var naamPok = dataJsonPok[i].name;	
+        			c.log(naamPok);
+    				
     			}
-    			q.resolve(moves);
-			},function(error){
-				q.reject(error);
-			});
-			return q.promise;
-   		
-	   }
-    })
-    
-    
+        	  })
+        	  
+          })
+		
+		
+		 })
+		
+	
+   
+  /* .service('pokSrv', function($http, $q) {
 
-    .service('saveSrv', function($http, $q){
-		  this.setObject = function(key, value){
+    })*/
+	
+	
+	  .service('getPutSrv', function($http, $q){
+		  this.setPok = function(key, value){
 			  $http.put('../../' + key, value);
 		  };
 		  
-		  this.getObject = function(key){
+		  this.getPok = function(){
 			  var q = $q.defer();
-			  $http.get('../../' + key)
-	  			.then(function(data){
+			  $http.get('../../../pokemon/_all_docs?include_docs=true')
+			  		.then(function(data){
 	  				q.resolve(data.data);
 	  			}, function(err) {
 	  				q.reject(err);
@@ -78,3 +68,4 @@ angular.module('pokApp', ['ngRoute'])
   			  return q.promise;
 		  };
 	});
+    
